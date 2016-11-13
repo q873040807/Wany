@@ -14,19 +14,19 @@ int** MallocHostDoubleArray(int Array_i,int Array_j);
 int main()
 {
 	int i1_max,j1_max,i2_max,j2_max;
-	printf("ÕâÊÇÒ»¸ö¾ØÕóÏà³ËµÄ³ÌĞò\n");
-	printf("ÇëÊäÈë¾ØÕóA´óĞ¡(ĞĞÁĞ´óĞ¡)\n");
-	scanf("%d %d",&j1_max,&i1_max);	//ÉèÖÃ¾ØÕóµÄ´óĞ¡
+	printf("è¿™æ˜¯ä¸€ä¸ªçŸ©é˜µç›¸ä¹˜çš„ç¨‹åº\n");
+	printf("è¯·è¾“å…¥çŸ©é˜µAå¤§å°(è¡Œåˆ—å¤§å°)\n");
+	scanf("%d %d",&j1_max,&i1_max);	//è®¾ç½®çŸ©é˜µçš„å¤§å°
 	int **table1=MallocHostDoubleArray(i1_max,j1_max);
-	printf("ÇëÊäÈë¾ØÕóAµÄÊı¾İ\n");
+	printf("è¯·è¾“å…¥çŸ©é˜µAçš„æ•°æ®\n");
 	for(int i=0;i<i1_max;i++)
 		for(int j=0;j<j1_max;j++)
 			scanf("%d",&table1[i][j]);
 
-	printf("ÇëÊäÈë¾ØÕóB´óĞ¡(ĞĞÁĞ´óĞ¡)\n");
-	scanf("%d %d",&j2_max,&i2_max);	//ÉèÖÃ¾ØÕóµÄ´óĞ¡
-	int **table2=MallocHostDoubleArray(i2_max,j2_max);	//ÎªÁ½¸ö¾ØÕó·ÖÅähost¿Õ¼ä
-	printf("ÇëÊäÈë¾ØÕóBµÄÊı¾İ\n");
+	printf("è¯·è¾“å…¥çŸ©é˜µBå¤§å°(è¡Œåˆ—å¤§å°)\n");
+	scanf("%d %d",&j2_max,&i2_max);	//è®¾ç½®çŸ©é˜µçš„å¤§å°
+	int **table2=MallocHostDoubleArray(i2_max,j2_max);	//ä¸ºä¸¤ä¸ªçŸ©é˜µåˆ†é…hostç©ºé—´
+	printf("è¯·è¾“å…¥çŸ©é˜µBçš„æ•°æ®\n");
 	for(int i=0;i<i2_max;i++)
 		for(int j=0;j<j2_max;j++)
 			scanf("%d",&table2[i][j]);
@@ -47,12 +47,12 @@ int main()
 	}*/
 
 
-	int **result=MallocHostDoubleArray(i1_max,j2_max);		//·ÖÅä´¢´æ½á¹ûµÄhost¿Õ¼ä
+	int **result=MallocHostDoubleArray(i1_max,j2_max);		//åˆ†é…å‚¨å­˜ç»“æœçš„hostç©ºé—´
 	int *ctable1_head,*ctable2_head,*cresult_head;
-	int **ctable1=MallocDeviceDoubleArray(&ctable1_head,i1_max,j1_max),**ctable2=MallocDeviceDoubleArray(&ctable2_head,i2_max,j2_max),**cresult=MallocDeviceDoubleArray(&cresult_head,i1_max,j2_max);	//ÎªÁ½¸ö¾ØÕó·ÖÅäÏÔ´æ¿Õ¼ä
+	int **ctable1=MallocDeviceDoubleArray(&ctable1_head,i1_max,j1_max),**ctable2=MallocDeviceDoubleArray(&ctable2_head,i2_max,j2_max),**cresult=MallocDeviceDoubleArray(&cresult_head,i1_max,j2_max);	//ä¸ºä¸¤ä¸ªçŸ©é˜µåˆ†é…æ˜¾å­˜ç©ºé—´
 	cudaMemset(cresult_head,0,sizeof(cresult_head));
 	cudaMemcpy(ctable1_head,*table1,sizeof(int)*i1_max*j1_max,cudaMemcpyHostToDevice);
-	cudaMemcpy(ctable2_head,*table2,sizeof(int)*i2_max*j2_max,cudaMemcpyHostToDevice);		//Îªtable1£¬2¸³Öµµ½ÏÔ´æ
+	cudaMemcpy(ctable2_head,*table2,sizeof(int)*i2_max*j2_max,cudaMemcpyHostToDevice);		//ä¸ºtable1ï¼Œ2èµ‹å€¼åˆ°æ˜¾å­˜
 	dim3 threadmax;
 	threadmax.x=i1_max;
 	threadmax.y=j2_max;
@@ -67,10 +67,10 @@ int main()
 	return 0;
 }
 /*
-*@ÓÃ¶şÎ¬Êı×éµÄĞÎÊ½·ÃÎÊÒ»Î¬Êı×é
-*@£¨¶şÎ¬Êı×é·ÃÎÊ£¬Ò»Î¬Êı×é´æ´¢£©
-*@Device¶ËÉú³É¶¯Ì¬¶şÎ¬Êı×é£¬head·µ»ØÒ»Î¬Êı×éµÄµØÖ·£¨ÒÔ±ãmemcpyÊ¹ÓÃ£©
-*@·µ»ØÖµÎª¶şÎ¬Êı×éÖ¸Õë
+*@ç”¨äºŒç»´æ•°ç»„çš„å½¢å¼è®¿é—®ä¸€ç»´æ•°ç»„
+*@ï¼ˆäºŒç»´æ•°ç»„è®¿é—®ï¼Œä¸€ç»´æ•°ç»„å­˜å‚¨ï¼‰
+*@Deviceç«¯ç”ŸæˆåŠ¨æ€äºŒç»´æ•°ç»„ï¼Œheadè¿”å›ä¸€ç»´æ•°ç»„çš„åœ°å€ï¼ˆä»¥ä¾¿memcpyä½¿ç”¨ï¼‰
+*@è¿”å›å€¼ä¸ºäºŒç»´æ•°ç»„æŒ‡é’ˆ
 */
 int** MallocDeviceDoubleArray(int** head,int Array_i,int Array_j)
 {
